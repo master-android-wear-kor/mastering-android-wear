@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "com.siddique.androidwear.today"
         minSdkVersion 23
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -23,15 +23,16 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.google.android.support:wearable:2.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.google.android.support:wearable:2.0.2'
+    provided 'com.google.android.wearable:wearable:2.0.2'
 
-    //This version should match the same version in wearable app
-    compile 'com.google.android.gms:play-services-wearable:8.1.0'
+    //웨어 앱과 버전이 같아야 함
+    compile 'com.google.android.gms:play-services-wearable:10.2.6'
 
-    //use volley to make HTTP requests
+    //Volley를 이용해 HTTP 요청을 처리함
     compile 'com.android.volley:volley:1.0.0'
 
-    //use JSoup for parsing HTML data
+    //JSoup을 이용해 HTML을 파싱함
     compile "org.jsoup:jsoup:1.8.1"
 }
