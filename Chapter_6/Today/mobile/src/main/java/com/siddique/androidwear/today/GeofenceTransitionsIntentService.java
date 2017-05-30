@@ -31,7 +31,7 @@ import java.util.Set;
 
 
 /**
- * Listens for geofence transition changes.
+ * 지오펜스 변경 내역을 수신
  */
 public class GeofenceTransitionsIntentService extends IntentService {
 
@@ -48,10 +48,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     /**
-     * Handles incoming intents.
+     * 전달받은 인텐트 처리
      *
-     * @param intent The Intent sent by Location Services. This Intent is provided to Location
-     *               Services (inside a PendingIntent) when addGeofences() is called.
+     * @param intent 로케이션 서비스가 보낸 인텐트. 이 인텐트는 addGeofences() 가 호출될 때 PendingIntent 에 포함된 형태로 로케이션 서비스에게 전달된다.
      */
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -64,7 +63,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         } else {
 
             int transitionType = geoFenceEvent.getGeofenceTransition();
-            // Get an instance of the NotificationManager service
+            // NotificationManager 서비스의 인스턴트를 가져옴
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(this);
 
@@ -76,13 +75,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 case Constants.HOME_GEOFENCE_ID:
                     if (Geofence.GEOFENCE_TRANSITION_ENTER == transitionType) {
                         Log.i(TAG, "Notifying home todo items");
-                        notifyTodoItems(notificationManager, "Home", Constants.HOME_TODO_NOTIFICATION_ID, R.drawable.white_house);
+                        notifyTodoItems(notificationManager, "집", Constants.HOME_TODO_NOTIFICATION_ID, R.drawable.white_house);
                     }
                     break;
                 case Constants.WORK_GEOFENCE_ID:
                     if (Geofence.GEOFENCE_TRANSITION_ENTER == transitionType) {
                         Log.i(TAG, "Notifying work todo items");
-                        notifyTodoItems(notificationManager, "Work", Constants.WORK_TODO_NOTIFICATION_ID, R.drawable.capitol_hill);
+                        notifyTodoItems(notificationManager, "회사", Constants.WORK_TODO_NOTIFICATION_ID, R.drawable.capitol_hill);
                     }
                     break;
             }
@@ -101,11 +100,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
                         .setSmallIcon(R.drawable.ic_today_notification)
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 getResources(), background))
-                        .setContentTitle(todoItems.size() + " " + todoItemType + " todo items found!")
+                        .setContentTitle(todoItemType + " 할 일 항목 "+ todoItems.size() + "개 발견!")
                         .setContentText(todoItems.toString()    )
                         .setContentIntent(viewPendingIntent);
 
-        // Build the notification and issues it with notification manager.
+        // 알림을 만들고, 노티피케이션 매니저를 통해 등록함
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 }
