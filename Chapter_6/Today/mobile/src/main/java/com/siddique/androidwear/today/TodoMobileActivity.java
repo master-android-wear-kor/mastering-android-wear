@@ -70,9 +70,9 @@ public class TodoMobileActivity extends AppCompatActivity implements GoogleApiCl
                     spinner.setAdapter(adapter);
 
                     AlertDialog dialog = new AlertDialog.Builder(TodoMobileActivity.this)
-                            .setTitle("할 일 항목 추가")
+                            .setTitle("Add a new todo item")
                             .setView(addTodoItemView)
-                            .setPositiveButton("추가", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     EditText taskEditText = (EditText) addTodoItemView.findViewById(R.id.todoItem);
@@ -89,7 +89,7 @@ public class TodoMobileActivity extends AppCompatActivity implements GoogleApiCl
                                     refreshItems();
                                 }
                             })
-                            .setNegativeButton("취소", null)
+                            .setNegativeButton("Cancel", null)
                             .create();
                     dialog.show();
                 }

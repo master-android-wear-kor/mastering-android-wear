@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">오늘</string>
-    <string name="day_of_year_card_title">올해 남은 날짜</string>
-    <string name="day_of_year_card_desc">오늘은 올해의 %1$d번째 날이고, %2$d일이 남아있다</string>
-</resources>

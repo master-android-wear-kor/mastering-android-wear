@@ -99,17 +99,17 @@ public class HandheldListenerService extends WearableListenerService implements 
         Log.i(TAG, "Message received" + messageEvent);
 
         if (Constants.ON_THIS_DAY_REQUEST.equals(messageEvent.getPath())) {
-            // 오늘의 역사를 위키백과에서 가져온다
+            //read Today's content from Wikipedia
             getOnThisDayContentFromWikipedia();
         }
     }
 
     private void getOnThisDayContentFromWikipedia() {
-        // RequestQueue 초기화
+        // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "https://en.wikipedia.org/wiki/Special:FeedItem/onthisday/" + DATE_FORMAT.format(new Date()) + "000000/en";
 
-        // URL로부터 문자열 결과를 받아온다
+        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -126,7 +126,7 @@ public class HandheldListenerService extends WearableListenerService implements 
                             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
                             DataMap dataMap = dataMapRequest.getDataMap();
 
-                            // 매번 웨어러블이 갱신된 데이터를 표시할 수 있도록 dataMap에 타임스탬프 정보를 추가한다.
+                            // We add a timestamp to make this dataMap 'dirty'. This lets the wearable get updates.
                             dataMap.putLong(Constants.ON_THIS_DAY_TIMESTAMP, new Date().getTime());
                             dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
 
@@ -161,7 +161,7 @@ public class HandheldListenerService extends WearableListenerService implements 
             }
         });
 
-        // RequestQueue 에 요청 추가
+        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 

@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">오늘</string>
-    <string name="app_name_underlined"><u>오늘</u></string>
-    <string name="devices_connected_text">연결된 디바이스 수:</string>
-    <string name="default_devices_connected">0</string>
-    <string name="title_activity_todo_mobile">오늘 - 할 일</string>
-</resources>

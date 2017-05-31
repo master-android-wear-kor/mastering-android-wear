@@ -26,7 +26,7 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
 
-        <!-- 웨어러블 디바이스가 보낸 메시지를 수신한다 -->
+        <!-- Listens for incoming messages from Wearable devices -->
         <service android:name=".HandheldListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />

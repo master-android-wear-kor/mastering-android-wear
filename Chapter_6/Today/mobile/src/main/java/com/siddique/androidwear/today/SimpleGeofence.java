@@ -18,7 +18,7 @@ package com.siddique.androidwear.today;
 
 public class SimpleGeofence {
 
-    // 인스턴스 변수
+    // Instance variables
     private final String mId;
     private final double mLatitude;
     private final double mLongitude;
@@ -26,17 +26,17 @@ public class SimpleGeofence {
     private long mExpirationDuration;
 
     public SimpleGeofence(String geofenceId, double latitude, double longitude) {
-        // 생성자가 전달받은 값을 인스턴스 필드에 할당
+        // Set the instance fields from the constructor.
         this.mId = geofenceId;
         this.mLatitude = latitude;
         this.mLongitude = longitude;
-        this.mRadius = 50; // 단위는 미터
+        this.mRadius = 50; //in meters
         this.mExpirationDuration = com.google.android.gms.location.Geofence.NEVER_EXPIRE;
     }
 
 
     public com.google.android.gms.location.Geofence toGeofence() {
-        // 새로운 SimpleGeofence 객체를 만든다
+        // Build a new SimpleGeofence object.
         return new com.google.android.gms.location.Geofence.Builder()
                 .setRequestId(mId)
                 .setTransitionTypes(com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER | com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT)

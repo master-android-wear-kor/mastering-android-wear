@@ -40,7 +40,7 @@ public class OnThisDayActivity extends Activity implements
         setContentView(R.layout.activity_on_this_day);
 
         if (onThisDay == null) {
-            Toast.makeText(this, "Wikipedia에서 데이터 가져오는 중...", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Fetching from Wikipedia...", Toast.LENGTH_LONG).show();
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(Wearable.API)
                     .addConnectionCallbacks(this)

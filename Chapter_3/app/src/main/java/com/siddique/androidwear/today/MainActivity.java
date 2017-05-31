@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 
                 Date today = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d - yyyy");
-                mTextView.setText("오늘은 " + dateFormat.format(today));
+                mTextView.setText("Today is " + dateFormat.format(today));
             }
         });
     }
