@@ -58,8 +58,7 @@ public class TodayActivity extends Activity implements
         }
     }
 
-    // This callback is invoked when the Speech Recognizer returns.
-    // This is where you process the intent and extract the speech text from the intent.
+    // 음성 인식 모듈이 인식을 마친 후 호출되며, 인텐트에 포함된 텍스트를 추출하는 작업을 함
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
@@ -67,7 +66,7 @@ public class TodayActivity extends Activity implements
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
             spokenText = results.get(0);
-            // Do something with spokenText
+            // 인식된 텍스트 처리
             Log.i(TAG, "Spoken Text = " + spokenText);
 
             if (spokenText.startsWith("home") || spokenText.startsWith("work")) {
@@ -84,12 +83,12 @@ public class TodayActivity extends Activity implements
         }
     }
 
-    // Create an intent that can start the Speech Recognizer activity
+    // 음성 인식 액티비티를 호출하는 인텐트를 생성
     private void displaySpeechRecognizer() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Start the activity, the intent will be populated with the speech text
+        // 액티비티를 시작하며, 액티비티는 음성 텍스트를 담은 인텐트를 반환한다.
         startActivityForResult(intent, Constants.SPEECH_REQUEST_CODE);
     }
 

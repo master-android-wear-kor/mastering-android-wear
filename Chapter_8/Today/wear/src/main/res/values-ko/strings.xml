@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">오늘</string>
+    <string name="day_of_year_card_title">올해 남은 날짜</string>
+    <string name="day_of_year_card_desc">오늘은 올해의 %1$d번째 날이고, %2$d일이 남아있다</string>
+
+    <string name="daily_step_count_title">총 걸음 수</string>
+    <string name="daily_step_count_desc">%1$d 걸음</string>
+
+    <string name="on_this_day_title">오늘의 역사</string>
+    <string name="on_this_day_desc">오늘의 역사 상세</string>
+</resources>
