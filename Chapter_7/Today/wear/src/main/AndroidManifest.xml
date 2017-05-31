@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <!-- We need this entry to use Google Play Services -->
+        <!-- 구글 플레이 서비스를 이용하기 위해 등록 -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <activity
             android:name=".TodayActivity"
