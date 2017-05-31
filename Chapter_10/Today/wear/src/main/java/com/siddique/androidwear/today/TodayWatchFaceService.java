@@ -55,11 +55,10 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Watch Face with blinking colons and seconds. In ambient mode, the seconds are
- * replaced with an AM/PM indicator and the colons don't blink. On devices with low-bit ambient
- * mode, the text is drawn without anti-aliasing in ambient mode. On devices which require burn-in
- * protection, the hours are drawn in normal rather than bold. The time is drawn with less contrast
- * and without seconds in mute mode.
+ * 콜론과 초 부분이 점멸하는 워치페이스. 대기 모드에선 초 대신 AM/PM 을 표시하고, 콜론도 점멸하지 않는다.
+ * 대기 모드에서 제한된 컬러 비트만 사용하는 디바이스에선 대기 모드의 텍스트에 안티 앨리어싱 효과가 적용되지 않는다.
+ * 번인 방지가 필요한 디바이스에선 시간 표시를 볼드 체가 아닌 일반 폰트로 표시한다.
+ * 뮤트 모드에선 초는 표시하지 않고, 시각도 대비가 낮은 색깔로 표시된다.
  */
 public class TodayWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = TodayWatchFaceService.class.getSimpleName();
@@ -67,13 +66,12 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
     private Typeface WATCH_TYPE_FACE = null;
 
     /**
-     * Update rate in milliseconds for normal (not ambient and not mute) mode. We update twice
-     * a second to blink the colons.
+     * 대기 모드나 뮤트 모드가 아닌 일반 모드의 업데이트 주기 (밀리세컨드 단위). 콜론을 깜빡이기 위해 0.5초 마다 갱신한다.
      */
     private static final long NORMAL_UPDATE_RATE_MS = 500;
 
     /**
-     * Update rate in milliseconds for mute mode. We update every minute, like in ambient mode.
+     * 뮤트 모드의 업데이트 주기. 대기 모드와 같이 1분 마다 갱신한다.
      */
     private static final long MUTE_UPDATE_RATE_MS = TimeUnit.MINUTES.toMillis(1);
 
@@ -89,24 +87,24 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
         static final String COLON_STRING = ":";
 
         /**
-         * Alpha value for drawing time when in mute mode.
+         * 뮤트 모드의 시각 텍스트 알파 값
          */
         static final int MUTE_ALPHA = 100;
 
         /**
-         * Alpha value for drawing time when not in mute mode.
+         * 뮤트 모드 이외의 모드의 시각 텍스트 알파 값
          */
         static final int NORMAL_ALPHA = 255;
 
         static final int MSG_UPDATE_TIME = 0;
 
         /**
-         * How often {@link #mUpdateTimeHandler} ticks in milliseconds.
+         * {@link #mUpdateTimeHandler} 의 갱신주기. 밀리초 단위.
          */
         long mInteractiveUpdateRateMs = NORMAL_UPDATE_RATE_MS;
 
         /**
-         * Handler to update the time periodically in interactive mode.
+         * 대화 모드에서 주기적으로 시각을 갱신하기 위한 핸들러
          */
         final Handler mUpdateTimeHandler = new Handler() {
             @Override
@@ -135,7 +133,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                 .build();
 
         /**
-         * Handles time zone and locale changes.
+         * 시간대와 로케일 변경 처리
          */
         final BroadcastReceiver mReceiver = new BroadcastReceiver() {
             @Override
@@ -147,8 +145,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
         };
 
         /**
-         * Unregistering an unregistered receiver throws an exception. Keep track of the
-         * registration state to prevent that.
+         * 등록하지 않은 리시버를 등록해제하려고 할 경우 예외가 발생하므로, 이런 상황을 막기 위해 등록 상태를 관리함
          */
         boolean mRegisteredReceiver = false;
 
@@ -183,8 +180,8 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                 WatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS;
 
         /**
-         * Whether the display supports fewer bits for each color in ambient mode. When true, we
-         * disable anti-aliasing in ambient mode.
+         * 디스플레이가 대기 모드에서 적은 컬러 비트만 사용하는 기능을 지원하는지 여부.
+         * true일 경우, 대기 모드에서 안티 앨리어싱을 사용하지 않는다.
          */
         boolean mLowBitAmbient;
 
@@ -254,7 +251,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
 
                 registerReceiver();
 
-                // Update time zone and date formats, in case they changed while we weren't visible.
+                // 화면에 보이지 않은 상태에서 시간대가 바뀐 경우에 대비하여 시간대와 날짜 포맷을 갱신한다.
                 mCalendar.setTimeZone(TimeZone.getDefault());
                 initFormats();
             } else {
@@ -266,8 +263,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                 }
             }
 
-            // Whether the timer should be running depends on whether we're visible (as well as
-            // whether we're in ambient mode), so we may need to start or stop the timer.
+            // 화면 표시 여부와 대기 모드 여부에 따라 타이머를 실행할지 결정해야 하기 때문에, 타이머를 시작하거나 멈춘다.
             updateTimer();
         }
 
@@ -303,7 +299,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             }
             super.onApplyWindowInsets(insets);
 
-            // Load resources that have alternate values for round watches.
+            // 둥근 모양 시계에서 사용할 리소스를 읽어들인다.
             Resources resources = TodayWatchFaceService.this.getResources();
             boolean isRound = insets.isRound();
             mXOffset = resources.getDimension(isRound
@@ -359,8 +355,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                     WatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
             adjustPaintColorToCurrentMode(mMinutePaint, mInteractiveMinuteDigitsColor,
                     WatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
-            // Actually, the seconds are not rendered in the ambient mode, so we could pass just any
-            // value as ambientColor here.
+            // 대기 모드에선 초를 표시하지 않기 때문에, 대기 모드용 색상은 아무 값이나 넘겨도 되긴 함
             adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
                     WatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
@@ -375,8 +370,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             }
             invalidate();
 
-            // Whether the timer should be running depends on whether we're in ambient mode (as well
-            // as whether we're visible), so we may need to start or stop the timer.
+            // 화면 표시 여부와 대기 모드 여부에 따라 타이머를 실행할지 결정해야 하기 때문에, 타이머를 시작하거나 멈춘다.
             updateTimer();
         }
 
@@ -393,7 +387,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             super.onInterruptionFilterChanged(interruptionFilter);
 
             boolean inMuteMode = interruptionFilter == WatchFaceService.INTERRUPTION_FILTER_NONE;
-            // We only need to update once a minute in mute mode.
+            // 뮤트 모드에선 1분 마다 화면을 갱신하면 된다.
             setInteractiveUpdateRateMs(inMuteMode ? MUTE_UPDATE_RATE_MS : NORMAL_UPDATE_RATE_MS);
 
             if (mMute != inMuteMode) {
@@ -414,7 +408,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             }
             mInteractiveUpdateRateMs = updateRateMs;
 
-            // Stop and restart the timer so the new update rate takes effect immediately.
+            // 새로운 갱신 주기를 반영하기 위해 타이머를 멈췄다 다시 시작한다.
             if (shouldTimerBeRunning()) {
                 updateTimer();
             }
@@ -479,14 +473,13 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             mDate.setTime(now);
             boolean is24Hour = DateFormat.is24HourFormat(TodayWatchFaceService.this);
 
-            // Show colons for the first half of each second so the colons blink on when the time
-            // updates.
+            // 시각을 갱신할 때, 1초의 앞 0.5초일 경우 콜론을 보여준다.
             mShouldDrawColons = (System.currentTimeMillis() % 1000) < 500;
 
-            // Draw the background.
+            // 배경을 그린다.
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
 
-            // Draw the hours.
+            // 시간을 그린다.
             float x = mXOffset;
             String hourString;
             if (is24Hour) {
@@ -501,20 +494,19 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             canvas.drawText(hourString, x, mYOffset, mHourPaint);
             x += mHourPaint.measureText(hourString);
 
-            // In ambient and mute modes, always draw the first colon. Otherwise, draw the
-            // first colon for the first half of each second.
+            // 대기 모드와 뮤트 모드에선 항상 첫번째 콜론을 그린다.그 외의 경우엔 1초의 앞 0.5초에만 콜론을 그린다.
             if (isInAmbientMode() || mMute || mShouldDrawColons) {
                 canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
             }
             x += mColonWidth;
 
-            // Draw the minutes.
+            // 분을 그린다.
             String minuteString = formatTwoDigitNumber(mCalendar.get(Calendar.MINUTE));
             canvas.drawText(minuteString, x, mYOffset, mMinutePaint);
             x += mMinutePaint.measureText(minuteString);
 
-            // In unmuted interactive mode, draw a second blinking colon followed by the seconds.
-            // Otherwise, if we're in 12-hour mode, draw AM/PM
+            // 뮤트되지 않은 대화 모드에선, 두 번째 콜론을 그리고 초를 그린다.
+            // 그 외의 모드에선 12시 시각 표시 모드일 경우 AM/PM 표시를 그린다.
             if (!isInAmbientMode() && !mMute) {
                 if (mShouldDrawColons) {
                     canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
@@ -528,11 +520,10 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                         mCalendar.get(Calendar.AM_PM)), x, mYOffset, mAmPmPaint);
             }
 
-            // Only render the day of week and date if there is no peek card, so they do not bleed
-            // into each other in ambient mode.
+            // 대기 모드에서 카드와 겹쳐 보이지 않도록, 보여줄 카드가 없을 때에만 요일과 날짜를 그린다.
             if (getPeekCardPosition().isEmpty()) {
                 if (tapCount == 0) {
-                    // Day of week
+                    // 요일
                     canvas.drawText(
                             mDayOfWeekFormat.format(mDate),
                             mXOffset, mYOffset + mLineHeight, mDatePaint);
@@ -540,7 +531,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                             mDateFormat.format(mDate),
                             mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
                 } else if (tapCount == 1) {
-                    // Day of Year
+                    // 1년 중 몇번째 날인지
                     canvas.drawText(
                             "Day of year",
                             mXOffset, mYOffset + mLineHeight, mDatePaint);
@@ -548,7 +539,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                             Integer.toString(TodayUtil.getDayOfYear()),
                             mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
                 } else if (tapCount == 2) {
-                    // Days left in Year
+                    // 1년 중 남은 날짜
                     canvas.drawText(
                             "Days left in year",
                             mXOffset, mYOffset + mLineHeight, mDatePaint);
@@ -561,8 +552,8 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
         }
 
         /**
-         * Starts the {@link #mUpdateTimeHandler} timer if it should be running and isn't currently
-         * or stops it if it shouldn't be running but currently is.
+         * {@link #mUpdateTimeHandler} 가 동작해야 하는데 동작하지 않고 있다면 타이머를 시작한다.
+         * 반대로 동작하지 않아야 하는데 동작하고 있다면 멈춘다.
          */
         private void updateTimer() {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -575,8 +566,8 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
         }
 
         /**
-         * Returns whether the {@link #mUpdateTimeHandler} timer should be running. The timer should
-         * only run when we're visible and in interactive mode.
+         * {@link #mUpdateTimeHandler} 타이머가 동작 상태여야 하는지를 반환한다.
+         * 타이머는 화면에 보이는 상태이고 대화 모드일 경우에만 동작해야 한다.
          */
         private boolean shouldTimerBeRunning() {
             return isVisible() && !isInAmbientMode();
@@ -587,8 +578,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
                     new WatchFaceUtil.FetchConfigDataMapCallback() {
                         @Override
                         public void onConfigDataMapFetched(DataMap startupConfig) {
-                            // If the DataItem hasn't been created yet or some keys are missing,
-                            // use the default values.
+                            // DataItem 이 아직 생성되지 않았거나 일부 키가 누락되었다면, 기본 값을 사용한다.
                             setDefaultValuesForMissingConfigKeys(startupConfig);
                             WatchFaceUtil.putConfigDataItem(mGoogleApiClient, startupConfig);
 
@@ -658,10 +648,10 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
         }
 
         /**
-         * Updates the color of a UI item according to the given {@code configKey}. Does nothing if
-         * {@code configKey} isn't recognized.
+         * 주어진 {@code configKey} 값에 따른 UI 항목의 색깔을 갱신한다.
+         * 모르는 {@code configKey} 라면 아무 처리도 하지 않는다.
          *
-         * @return whether UI has been updated
+         * @return UI가 갱신되었는지 여부
          */
         private boolean updateUiForKey(String configKey, int color) {
             switch (configKey) {

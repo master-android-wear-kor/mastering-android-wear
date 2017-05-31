@@ -34,68 +34,64 @@ public final class WatchFaceUtil {
     private static final String TAG = WatchFaceUtil.class.getSimpleName();
 
     /**
-     * The {@link DataMap} key for {@link TodayWatchFaceService} background color name.
-     * The color name must be a {@link String} recognized by {@link Color#parseColor}.
+     * {@link DataMap} 의 {@link TodayWatchFaceService} 배경색 키 값.
+     * 색 값은 {@link Color#parseColor} 이 해석할 수 있는 {@link String} 값이어야 함.
      */
     public static final String KEY_BACKGROUND_COLOR = "BACKGROUND_COLOR";
 
     /**
-     * The {@link DataMap} key for {@link TodayWatchFaceService} hour digits color name.
-     * The color name must be a {@link String} recognized by {@link Color#parseColor}.
+     * {@link DataMap} 의 {@link TodayWatchFaceService} 시간 글씨 색 키 값.
+     * 색 값은 {@link Color#parseColor} 이 해석할 수 있는 {@link String} 값이어야 함.
      */
     public static final String KEY_HOURS_COLOR = "HOURS_COLOR";
 
     /**
-     * The {@link DataMap} key for {@link TodayWatchFaceService} minute digits color name.
-     * The color name must be a {@link String} recognized by {@link Color#parseColor}.
+     * {@link DataMap} 의 {@link TodayWatchFaceService} 분 글씨 색 키 값.
+     * 색 값은 {@link Color#parseColor} 이 해석할 수 있는 {@link String} 값이어야 함.
      */
     public static final String KEY_MINUTES_COLOR = "MINUTES_COLOR";
 
     /**
-     * The {@link DataMap} key for {@link TodayWatchFaceService} second digits color name.
-     * The color name must be a {@link String} recognized by {@link Color#parseColor}.
+     * {@link DataMap} 의 {@link TodayWatchFaceService} 초 글씨 색 키 값.
+     * 색 값은 {@link Color#parseColor} 이 해석할 수 있는 {@link String} 값이어야 함.
      */
     public static final String KEY_SECONDS_COLOR = "SECONDS_COLOR";
 
     /**
-     * The path for the {@link DataItem} containing {@link TodayWatchFaceService} configuration.
+     * {@link TodayWatchFaceService} 설정 값을 담은 {@link DataItem} 의 경로.
      */
     public static final String PATH_WITH_FEATURE = "/watch_face_config/Digital";
 
     /**
-     * Name of the default interactive mode background color and the ambient mode background color.
+     * 대화 모드와 대기 모드의 기본 배경 색.
      */
     public static final String COLOR_NAME_DEFAULT_AND_AMBIENT_BACKGROUND = "Black";
     public static final int COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND =
             parseColor(COLOR_NAME_DEFAULT_AND_AMBIENT_BACKGROUND);
 
     /**
-     * Name of the default interactive mode hour digits color and the ambient mode hour digits
-     * color.
+     * 대화 모드와 대기 모드의 기본 시간 글씨 색.
      */
     public static final String COLOR_NAME_DEFAULT_AND_AMBIENT_HOUR_DIGITS = "White";
     public static final int COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS =
             parseColor(COLOR_NAME_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
 
     /**
-     * Name of the default interactive mode minute digits color and the ambient mode minute digits
-     * color.
+     * 대화 모드와 대기 모드의 기본 분 글씨 색.
      */
     public static final String COLOR_NAME_DEFAULT_AND_AMBIENT_MINUTE_DIGITS = "White";
     public static final int COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS =
             parseColor(COLOR_NAME_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
 
     /**
-     * Name of the default interactive mode second digits color and the ambient mode second digits
-     * color.
+     * 대화 모드와 대기 모드의 기본 초 글씨 색.
      */
     public static final String COLOR_NAME_DEFAULT_AND_AMBIENT_SECOND_DIGITS = "Gray";
     public static final int COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS =
             parseColor(COLOR_NAME_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
     /**
-     * Callback interface to perform an action with the current config {@link DataMap} for
-     * {@link TodayWatchFaceService}.
+     * {@link TodayWatchFaceService}의 {@link DataMap} 설정 관련 콜백 인터페이스
      */
     public interface FetchConfigDataMapCallback {
         /**
@@ -110,11 +106,9 @@ public final class WatchFaceUtil {
     }
 
     /**
-     * Asynchronously fetches the current config {@link DataMap} for {@link TodayWatchFaceService}
-     * and passes it to the given callback.
+     * {@link TodayWatchFaceService} 의 현재 {@link DataMap} 설정을 비동기로 읽어들이고, 콜백을 호출한다.
      * <p>
-     * If the current config {@link DataItem} doesn't exist, it isn't created and the callback
-     * receives an empty DataMap.
+     * {@link DataItem} 설정이 존재하지 않는다면, 빈 DataMap 이 콜백에 전달된다.
      */
     public static void fetchConfigDataMap(final GoogleApiClient client,
             final FetchConfigDataMapCallback callback) {
@@ -136,12 +130,11 @@ public final class WatchFaceUtil {
     }
 
     /**
-     * Overwrites (or sets, if not present) the keys in the current config {@link DataItem} with
-     * the ones appearing in the given {@link DataMap}. If the config DataItem doesn't exist,
-     * it's created.
+     * 설정 값을 담은 {@link DataItem} 중 {@link DataMap}의 키와 값으로 설정 값을 덮어씌운다.
+     * DataItem 이 생성되지 않았다면 새로 생성한다.
      * <p>
-     * It is allowed that only some of the keys used in the config DataItem appear in
-     * {@code configKeysToOverwrite}. The rest of the keys remains unmodified in this case.
+     * DataItem 의 내용 중 {@code configKeysToOverwrite} 에서 명시한 키에 해당하는 값만 변경된다.
+     * 나머지 값들은 변경되지 않는다.
      */
     public static void overwriteKeysInConfigDataMap(final GoogleApiClient googleApiClient,
             final DataMap configKeysToOverwrite) {
@@ -160,8 +153,8 @@ public final class WatchFaceUtil {
     }
 
     /**
-     * Overwrites the current config {@link DataItem}'s {@link DataMap} with {@code newConfig}.
-     * If the config DataItem doesn't exist, it's created.
+     * 설정 값을 담은  {@link DataItem}의 {@link DataMap} 을 {@code newConfig}로 교체한다.
+     * DataItem 이 생성되지 않았다면 새로 생성한다.
      */
     public static void putConfigDataItem(GoogleApiClient googleApiClient, DataMap newConfig) {
         PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(PATH_WITH_FEATURE);

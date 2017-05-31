@@ -3,7 +3,7 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
-    <!-- Required to act as a custom watch face. -->
+    <!-- 커스텀 워치페이스로 동작하기 위해 필요함 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-sdk android:minSdkVersion="20"
@@ -17,10 +17,10 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <!--If you want your app to run on pre-22, then set required to false -->
+        <!-- API 레벨 22 미만에서도 실행되려면 required 값이 false여야 함 -->
         <uses-library android:name="com.google.android.wearable" android:required="false" />
 
-        <!-- We need this entry to use Google Play Services -->
+        <!-- 구글 플레이 서비스를 이용하기 위해 등록 -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <activity
             android:name=".TodayActivity"

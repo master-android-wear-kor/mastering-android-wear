@@ -15,7 +15,7 @@ public class StepCounterActivity extends Activity implements SensorEventListener
     private SensorManager mSensorManager;
     private Sensor mSensor;
 
-    // Steps counted since the last reboot
+    // 마지막 부팅 이후 측정된 걸음 수
     private int mSteps = 0;
 
     private static final String TAG = StepCounterActivity.class.getName();
