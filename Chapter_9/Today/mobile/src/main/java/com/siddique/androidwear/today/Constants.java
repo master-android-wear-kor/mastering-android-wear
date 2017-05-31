@@ -9,12 +9,12 @@ public class Constants {
     public static final String ON_THIS_DAY_DATA_ITEM_CONTENT = "/today/onThisDayContent";
 
 
-    //Geofence parameters for 'Home' (Whitehouse)
+    //'Home' 에 대한 지오펜스 매개변수 (백악관)
     public static final String HOME_GEOFENCE_ID = "1";
     public static final double HOME_LATITUDE = 38.897885;
     public static final double HOME_LONGITUDE = -77.036541;
 
-    //Geofence parameters for 'Work' (Capitol Hill)
+    //'Work' 에 대한 지오펜스 매개변수 (Capitol Hill)
     public static final String WORK_GEOFENCE_ID = "2";
     public static final double WORK_LATITUDE = 38.886050;
     public static final double WORK_LONGITUDE = -76.999621;

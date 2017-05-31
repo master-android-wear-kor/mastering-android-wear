@@ -14,10 +14,10 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <!--If you want your app to run on pre-22, then set required to false -->
+        <!-- API 레벨 22 미만에서도 실행되게 하기 위해선 required 값을 false로 설정해야 함 -->
         <uses-library android:name="com.google.android.wearable" android:required="false" />
 
-        <!-- We need this entry to use Google Play Services -->
+        <!-- 구글 플레이 서비스를 이용하기 위해 등록 -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <activity
             android:name=".TodayActivity"
