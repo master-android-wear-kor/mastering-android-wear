@@ -1,5 +1,6 @@
 <resources>
     <!-- res/values/dimens.xml 에 정의된 값을 커스터마이징하는 예시.
-    폭 820dp 이상의 화면을 가진 디바이스에 적용되며, 가로모드로 7인치와 10인치인 디바이스(각각 ~960dp 와 ~1280dp) 가 이 조건에 해당한다. -->
+         폭 820dp 이상의 화면을 가진 디바이스에 적용되며,
+         가로모드로 7인치와 10인치인 디바이스(각각 ~960dp 와 ~1280dp) 가 이 조건에 해당한다. -->
     <dimen name="activity_horizontal_margin">64dp</dimen>
 </resources>
