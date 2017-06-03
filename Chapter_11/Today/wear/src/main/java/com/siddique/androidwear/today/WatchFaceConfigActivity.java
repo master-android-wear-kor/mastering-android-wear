@@ -39,8 +39,7 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.Wearable;
 
 /**
- * The watch-side config activity for {@link TodayWatchFaceService}, which allows for setting the
- * background color.
+ * 워치의 {@link TodayWatchFaceService} 설정 액티비티. 배경 색깔을 설정할 수 있다.
  */
 public class WatchFaceConfigActivity extends Activity implements
         WearableListView.ClickListener, WearableListView.OnScrollListener {
@@ -57,7 +56,7 @@ public class WatchFaceConfigActivity extends Activity implements
         mHeader = (TextView) findViewById(R.id.header);
         WearableListView listView = (WearableListView) findViewById(R.id.color_picker);
         BoxInsetLayout content = (BoxInsetLayout) findViewById(R.id.content);
-        // BoxInsetLayout adds padding by default on round devices. Add some on square devices.
+        // BoxInsetLayout 는 기본적으로 원형 디바이스에서 패딩을 추가한다. 사각 디바이스의 경우 패딩을 좀 더 추가한다.
         content.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @Override
             public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
@@ -176,7 +175,7 @@ public class WatchFaceConfigActivity extends Activity implements
                             ViewGroup.LayoutParams.WRAP_CONTENT);
             int colorPickerItemMargin = (int) getResources()
                     .getDimension(R.dimen.digital_config_color_picker_item_margin);
-            // Add margins to first and last item to make it possible for user to tap on them.
+            // 사용자가 탭 하기 편하도록 처음과 마지막 항목에 마진을 추가함
             if (position == 0) {
                 layoutParams.setMargins(0, colorPickerItemMargin, 0, 0);
             } else if (position == mColors.length - 1) {
@@ -193,12 +192,12 @@ public class WatchFaceConfigActivity extends Activity implements
         }
     }
 
-    /** The layout of a color item including image and label. */
+    /** 색상 아이템의 레이아웃. 이미지와 라벨을 포함함 */
     private static class ColorItem extends LinearLayout implements
             WearableListView.OnCenterProximityListener {
-        /** The duration of the expand/shrink animation. */
+        /** 펼치기/접기 애니메이션 시간 */
         private static final int ANIMATION_DURATION_MS = 150;
-        /** The ratio for the size of a circle in shrink state. */
+        /** 접힌 상태의 원형 크기의 비율 */
         private static final float SHRINK_CIRCLE_RATIO = .75f;
 
         private static final float SHRINK_LABEL_ALPHA = .5f;

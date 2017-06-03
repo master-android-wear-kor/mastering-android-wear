@@ -45,7 +45,7 @@ public class TodosActivity extends WearableActivity implements
 
         mSelectedTodoItemType = TodoItemType.HOME;
 
-        // Initialize content
+        // 컨텐트 초기화
         mTodoItemTypeFragment = new TodoItemTypeFragment();
         Bundle args = new Bundle();
 
@@ -56,26 +56,26 @@ public class TodosActivity extends WearableActivity implements
         fragmentManager.beginTransaction().replace(R.id.content_frame, mTodoItemTypeFragment).commit();
 
 
-        // Main Wearable Drawer Layout that wraps all content
+        // 모든 컨텐트를 포함하는 메인 WearableDrawerLayout
         mWearableDrawerLayout = (WearableDrawerLayout) findViewById(R.id.drawer_layout);
 
-        // Top Navigation Drawer
+        // 상단 NavigationDrawer
         mWearableNavigationDrawer =
                 (WearableNavigationDrawer) findViewById(R.id.top_navigation_drawer);
 
         Log.i(TAG, "mWearableNavigationDrawer  = " + mWearableNavigationDrawer);
         mWearableNavigationDrawer.setAdapter(new NavigationAdapter(this));
 
-        // Peeks Navigation drawer on the top.
+        // 상단의 NavigationDrawer를 보여줌
         mWearableDrawerLayout.peekDrawer(Gravity.TOP);
 
-        // Bottom Action Drawer
+        // 하단 ActionDrawer
         mWearableActionDrawer =
                 (WearableActionDrawer) findViewById(R.id.bottom_action_drawer);
 
         mWearableActionDrawer.setOnMenuItemClickListener(this);
 
-        // Peeks action drawer on the bottom.
+        // 하단 ActionDrawer를 보여줌
         mWearableDrawerLayout.peekDrawer(Gravity.BOTTOM);
 
     }
@@ -160,7 +160,7 @@ public class TodosActivity extends WearableActivity implements
     }
 
     /**
-     * Fragment that appears in the "content_frame", just shows the currently selected todo item type.
+     * content_frame 에 표시되는 프래그먼트. 현재 선택된 할일 항목 타입을 보여줌
      */
     public static class TodoItemTypeFragment extends Fragment {
         public static final String ARG_TODO_TYPE = "todo_type";
@@ -169,7 +169,7 @@ public class TodosActivity extends WearableActivity implements
         TextView descView = null;
 
         public TodoItemTypeFragment() {
-            // Empty constructor required for fragment subclasses
+            // 프래그먼트의 자식 클래스는 아무 인자도 갖지 않는 생성자를 가져야 한다
         }
 
         @Override

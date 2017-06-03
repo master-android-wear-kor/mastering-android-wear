@@ -3,7 +3,7 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
-    <!-- Required to act as a custom watch face. -->
+    <!-- 커스텀 워치페이스로 동작하기 위해 필요함 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-sdk android:minSdkVersion="20"
@@ -17,10 +17,10 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <!--If you want your app to run on pre-22, then set required to false -->
+        <!-- API 레벨 22 미만에서도 실행되려면 required 값이 false여야 함 -->
         <uses-library android:name="com.google.android.wearable" android:required="false" />
 
-        <!-- We need this entry to use Google Play Services -->
+        <!-- 구글 플레이 서비스를 이용하기 위해 등록 -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <activity
             android:name=".TodayActivity"
@@ -40,10 +40,9 @@
             android:name=".OnThisDayActivity"
             android:label="@string/on_this_day_title" />
         <!--
-        To update the screen more than once per minute in ambient mode, developers should set
-        the launch mode for the activity to single instance. Otherwise, the AlarmManager launch
-        intent will open a new activity every time the Alarm is triggered rather than reusing
-        the same (already active) Activity.
+        대기 모드에서 화면을 1분보다 자주 갱신하려면, 액티비티의 실행 모드를 싱글 인스턴스로 지정해야 한다.
+        이렇게 지정하지 않으면 매번 알람이 실행될 때 마다 AlarmManager 실행 인텐트는 기존 새로운 액티비티를 활용하지 않고
+        매번 새로운 액티비티를 만든다.
         -->
         <activity
             android:name=".StepCounterActivity"

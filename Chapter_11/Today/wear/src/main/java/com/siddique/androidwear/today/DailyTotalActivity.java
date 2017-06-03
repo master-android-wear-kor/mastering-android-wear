@@ -35,43 +35,40 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Demonstrates support for Ambient screens by extending WearableActivity and overriding
- * onEnterAmbient, onUpdateAmbient, and onExitAmbient.
+ * WearableActivity 를 확장하고 onEnterAmbient, onUpdateAmbient, onExitAmbient 메서드를 오버라이딩 해서
+ * 구현한 대기 화면 지원 기능 데모.
  *
- * There are two modes (Active and Ambient). To trigger future updates (data/screen), we use a
- * custom Handler for the "Active" mode and an Alarm for the "Ambient" mode.
+ * 모드는 크게 대화 모드와 대기 모드로 구분된다. 데이터와 화면 갱신을 위해 대화 모드에선 커스텀 핸들러를 사용하고,
+ * 대기 모드에선 알람을 사용한다.
  *
- * Why don't we use just one? Handlers are generally less battery intensive and can be triggered
- * every second. However, they can not wake up the processor (common in Ambient mode).
+ * 왜 한가지 방식만 사용하지 않았을까? 일반적으로 핸들러는 배터리 절약을 염두에 두지 않으며, 1초 간격으로도 실행될 수 있다.
+ * 하지만 핸들러는 프로세서를 깨우지 못한다. (대기 모드에선 프로세스가 슬립 모드일 경우가 많다)
  *
- * Alarms can wake up the processor (what we need for Ambient), but they struggle with quick updates
- * (less than one second) and are much less efficient compared to Handlers.
+ * 알람은 프로세서를 깨울 수 있기 때문에 대기 모드에선 알람을 사용해야 한다. 하지만 빠른 업데이트에는 적합하지 않고,
+ * 이런 경우에는 핸들러를 써야 한다.
  *
- * Therefore, we use Handlers for "Active" mode (can trigger every second and are better on the
- * battery), and we use Alarms for "Ambient" mode (only need to update once every 20 seconds and
- * they can wake up a sleeping processor).
+ * 따라서 대화 모드에선 핸들러를 사용하고(매 초 실행되며 배터리를 더 많이 사용한다.),
+ * 대기 모드에선 알람을 사용한다(20초 간격으로만 실행되어도 되고, 프로세서를 깨울 수 있다).
  *
- * Again, the Activity waits 20 seconds between doing any processing (getting data, updating screen
- * etc.) while in ambient mode to conserving battery life (processor allowed to sleep). If you can
- * hold off on updates for a full minute, you can throw away all the Alarm code and just use
- * onUpdateAmbient() to save even more battery life.
+ * 대기 모드에서 액티비티는 배터리를 절약하기 위해 데이터 가져오기, 화면 갱신 등의 각 작업마다 20초의 대기 시간을 기잔다.
+ * 이 대기 시간 동안 프로세서는 슬립 모드에 들어갈 수 있다.
+ * 1분 마다 화면과 데이터를 갱신해도 된다면 알람과 관련된 코드는 모두 지우고 onUpdateAmbient() 만 쓰면 된다. 이 경우
+ * 베터리를 더 많이 절약할 수 있다.
  *
- * As always, you will still want to apply the performance guidelines outlined in the Watch Faces
- * documention to your app.
+ * 대기 모드에서도 워치 페이스 문서의 성능 가이드라인을 준수해야 한다.
  *
- * Finally, in ambient mode, this Activity follows the same best practices outlined in the
- * Watch Faces API documentation, e.g., keep most pixels black, avoid large blocks of white pixels,
- * use only black and white, and disable anti-aliasing.
- *
+ * 이 액티비티의 대기 모드에는 워치 페이스 API 문서에서 제시하는 대부분의 픽셀을 검정색으로 칠하기,
+ * 가급적 흰색 픽셀로 채우는 영역을 갖지 않기, 흑백 색상만 사용하기,
+ * 안티 앨리어싱 사용하지 않기 등의 우수 실천 사례를 적용했다.
  */
 public class DailyTotalActivity extends WearableActivity {
 
     private static final String TAG = DailyTotalActivity.class.getSimpleName();
 
-    /** Custom 'what' for Message sent to Handler. */
+    /** 핸들러에 전달하는 메시지의 'what' 값 */
     private static final int MSG_UPDATE_SCREEN = 0;
 
-    /** Milliseconds between updates based on state. */
+    /** 상태 별 업데이트 주기. 단위는 밀리초 */
     private static final long ACTIVE_INTERVAL_MS = TimeUnit.SECONDS.toMillis(1);
     private static final long AMBIENT_INTERVAL_MS = TimeUnit.SECONDS.toMillis(20);
 
@@ -89,18 +86,15 @@ public class DailyTotalActivity extends WearableActivity {
 
 
     /**
-     * Since the handler (used in active mode) can't wake up the processor when the device is in
-     * ambient mode and undocked, we use an Alarm to cover ambient mode updates when we need them
-     * more frequently than every minute. Remember, if getting updates once a minute in ambient
-     * mode is enough, you can do away with the Alarm code and just rely on the onUpdateAmbient()
-     * callback.
+     * 핸들러는 디바이스가 대기 모드이면서 충전중이 아닐 경우 프로세서를 깨우지 못하기 때문에 대화 모드에서만 사용한다.
+     * 대신 1분 보다 자주 정보를 갱신하기 위해 대기 모드에선 알람을 이용한다.
+     * 1분 보다 자주 갱신할 필요가 없다면, 알람 관련된 코드는 모두 지우고 onUpdateAmbient() 메서드만 이용해도 된다.
      */
     private AlarmManager mAmbientStateAlarmManager;
     private PendingIntent mAmbientStatePendingIntent;
 
     /**
-     * This custom handler is used for updates in "Active" mode. We use a separate static class to
-     * help us avoid memory leaks.
+     * 대화 모드에서 사용하는 커스텀 핸들러. 메모리 누수를 막기 위해 정적 클래스로 선언한다.
      */
     private final Handler mActiveModeUpdateHandler = new UpdateHandler(this);
 
@@ -123,7 +117,7 @@ public class DailyTotalActivity extends WearableActivity {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        /** Determines whether watch is round or square and applies proper view. **/
+        /** 워치가 원형인지 사각형인지 판단하고, 적절한 뷰를 적용한다. **/
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -141,8 +135,7 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * This is mostly triggered by the Alarms we set in Ambient mode and informs us we need to
-     * update the screen (and process any data).
+     * 대게 대기 모드에서 알람에 의해 호출되며, 데이터 처리와 화면 갱신을 수행한다.
      */
     @Override
     public void onNewIntent(Intent intent) {
@@ -165,7 +158,7 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * Prepares UI for Ambient view.
+     * 대기 모드에서 사용할 UI를 준비한다.
      */
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
@@ -173,13 +166,14 @@ public class DailyTotalActivity extends WearableActivity {
         super.onEnterAmbient(ambientDetails);
 
 
-        /** Clears Handler queue (only needed for updates in active mode). */
+        /** 대기 모드에선 핸들러를 사용하지 않기 때문에 핸들러 큐를 정리한다. */
         mActiveModeUpdateHandler.removeMessages(MSG_UPDATE_SCREEN);
 
         /**
-         * Following best practices outlined in WatchFaces API (keeping most pixels black,
-         * avoiding large blocks of white pixels, using only black and white,
-         * and disabling anti-aliasing anti-aliasing, etc.)
+         * 워치페이스 API의 우수 실천 사례를 적용한다.
+         * (대부분의 픽셀을 검정색으로 칠하기,
+         * 가급적 흰색 픽셀로 채우는 영역을 갖지 않기, 흑백 색상만 사용하기,
+         * 안티 앨리어싱 사용하지 않기 등)
          */
         mStateTextView.setTextColor(Color.WHITE);
         mUpdateRateTextView.setTextColor(Color.WHITE);
@@ -195,14 +189,12 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * Updates UI in Ambient view (once a minute). Because we need to update UI sooner than that
-     * (every ~20 seconds), we also use an Alarm. However, since the processor is awake for this
-     * callback, we might as well call refreshDisplayAndSetNextUpdate() to update screen and reset
-     * the Alarm.
+     * 대기 모드에서 매 1분 마다 UI를 갱신한다. 우리는 매 20초 마다 화면을 갱신해야 하기 때문에 별로도 알람을 사용해다.
+     * 하지만 이 메서드가 불릴 때 프로세서는 깨어있는 상태이기 때문에, 여기서도 refreshDisplayAndSetNextUpdate() 를
+     * 호출해서 화면을 갱신하고 알람을 리셋한다.
      *
-     * If you are happy with just updating the screen once a minute in Ambient Mode (which will be
-     * the case a majority of the time), then you can just use this method and remove all
-     * references/code regarding Alarms.
+     * 대기 모드에서 1분마다 화면을 갱신해도 충분하다면(대부분의 경우에 해당할 것이다), 이 메서드만 사용해서 화면을 갱신하고
+     * 다른 알람 관련 코드는 지워버려도 된다.
      */
     @Override
     public void onUpdateAmbient() {
@@ -213,14 +205,14 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * Prepares UI for Active view (non-Ambient).
+     * 대화 모드에서 사용할 UI를 준비한다.
      */
     @Override
     public void onExitAmbient() {
         Log.d(TAG, "onExitAmbient()");
         super.onExitAmbient();
 
-        /** Clears out Alarms since they are only used in ambient mode. */
+        /** 알람은 대기 모드에서만 사용하므로 초기화한다. */
         mAmbientStateAlarmManager.cancel(mAmbientStatePendingIntent);
 
         mStateTextView.setTextColor(Color.GREEN);
@@ -237,8 +229,8 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * Loads data/updates screen (via method), but most importantly, sets up the next refresh
-     * (active mode = Handler and ambient mode = Alarm).
+     * 데이터를 읽고 화면을 갱신한다. 또한 다음 갱신을 위한 준비 작업을 한다
+     * (대화 모드에선 핸들러에 메시지 등록, 대기 모드에선 알람 등록)
      */
     private void refreshDisplayAndSetNextUpdate() {
 
@@ -247,14 +239,14 @@ public class DailyTotalActivity extends WearableActivity {
         long timeMs = System.currentTimeMillis();
 
         if (isAmbient()) {
-            /** Calculate next trigger time (based on state). */
+            /** 모드에 따른 다음 갱신 시각을 계산 */
             long delayMs = AMBIENT_INTERVAL_MS - (timeMs % AMBIENT_INTERVAL_MS);
             long triggerTimeMs = timeMs + delayMs;
 
             /**
-             * Note: Make sure you have set activity launchMode to singleInstance in the manifest.
-             * Otherwise, it is easy for the AlarmManager launch intent to open a new activity
-             * every time the Alarm is triggered rather than reusing this Activity.
+             * 참고: 매니페스트에서 액티비티의 실행 모드를 singleInstance 로 설정해야 한다.
+             * 이렇게 설정하지 않으면 매번 알람이 활성화 될 때 마다 AlarmManager 가 보낸 인텐트는
+             * 기존 액티비티를 사용하지 않고 새로운 액티비티를 만든다.
              */
             mAmbientStateAlarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
@@ -262,7 +254,7 @@ public class DailyTotalActivity extends WearableActivity {
                     mAmbientStatePendingIntent);
 
         } else {
-            /** Calculate next trigger time (based on state). */
+            /** 모드에 따른 다음 갱신 시각을 계산 */
             long delayMs = ACTIVE_INTERVAL_MS - (timeMs % ACTIVE_INTERVAL_MS);
 
             mActiveModeUpdateHandler.removeMessages(MSG_UPDATE_SCREEN);
@@ -271,7 +263,7 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * Updates display based on Ambient state. If you need to pull data, you should do it here.
+     * 대기 모드 상태에 따라 화면을 갱신한다. 데이터를 가져와야 한다면 여기서 수행한다.
      */
     private void loadDataAndUpdateScreen() {
 
@@ -303,7 +295,7 @@ public class DailyTotalActivity extends WearableActivity {
     }
 
     /**
-     * Handler separated into static class to avoid memory leaks.
+     * 메모리 누수를 막기 위해 핸들러는 별도의 정적 클래스로 선언한다.
      */
     private static class UpdateHandler extends Handler {
         private final WeakReference<DailyTotalActivity> mMainActivityWeakReference;

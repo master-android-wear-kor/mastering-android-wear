@@ -55,14 +55,14 @@ public class OnThisDayGridPagerAdapter extends FragmentGridPagerAdapter {
         Resources res = mContext.getResources();
         CardFragment fragment =
                 CardFragment.create(title, content);
-        // Add some extra bottom margin to leave room for the page indicator
+        // 페이지 식별자를 추가할 공간을 확보하기 위해 하단 마진을 추가한다.
         fragment.setCardMarginBottom(
                 res.getDimensionPixelSize(R.dimen.card_margin_bottom));
         return fragment;
     }
 
 
-    /** A convenient container for a row of fragments. */
+    /** 프래그먼트로 구성된 행을 다루는 컨테이너 */
     private class Row {
         final List<Fragment> columns = new ArrayList<Fragment>();
 

@@ -26,7 +26,7 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     private SensorManager mSensorManager;
     private Sensor mSensor;
 
-    // Steps counted since the last reboot
+    // 마지막 부팅 이후 측정된 걸음 수
     private int mSteps = 0;
 
     private static final String TAG = StepCounterActivity.class.getName();
@@ -36,29 +36,22 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     private TextView title, desc;
 
     /**
-     * Since the handler (used in active mode) can't wake up the processor when the device is in
-     * ambient mode and undocked, we use an Alarm to cover ambient mode updates when we need them
-     * more frequently than every minute. Remember, if getting updates once a minute in ambient
-     * mode is enough, you can do away with the Alarm code and just rely on the onUpdateAmbient()
-     * callback.
+     * 핸들러는 디바이스가 대기 모드이면서 충전중이 아닐 경우 프로세서를 깨우지 못하기 때문에 대화 모드에서만 사용한다.
+     * 대신 1분 보다 자주 정보를 갱신하기 위해 대기 모드에선 알람을 이용한다.
+     * 1분 보다 자주 갱신할 필요가 없다면, 알람 관련된 코드는 모두 지우고 onUpdateAmbient() 메서드만 이용해도 된다.
      */
     private AlarmManager mAmbientStateAlarmManager;
     private PendingIntent mAmbientStatePendingIntent;
 
     /**
-     * This custom handler is used for updates in "Active" mode. We use a separate static class to
-     * help us avoid memory leaks.
+     * 대화 모드에서 사용하는 커스텀 핸들러. 메모리 누수를 막기 위해 정적 클래스로 선언한다.
      */
     private final Handler mActiveModeUpdateHandler = new UpdateHandler(this);
 
-    /**
-     * Custom 'what' for Message sent to Handler.
-     */
+    /** 핸들러에 전달하는 메시지의 'what' 값 */
     private static final int MSG_UPDATE_SCREEN = 0;
 
-    /**
-     * Milliseconds between updates based on state.
-     */
+    /** 상태 별 업데이트 주기. 단위는 밀리초 */
     private static final long ACTIVE_INTERVAL_MS = TimeUnit.SECONDS.toMillis(1);
     private static final long AMBIENT_INTERVAL_MS = TimeUnit.SECONDS.toMillis(20);
 
@@ -90,8 +83,7 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     }
 
     /**
-     * This is mostly triggered by the Alarms we set in Ambient mode and informs us we need to
-     * update the screen (and process any data).
+     * 대게 대기 모드에서 알람에 의해 호출되며, 데이터 처리와 화면 갱신을 수행한다.
      */
     @Override
     public void onNewIntent(Intent intent) {
@@ -150,7 +142,7 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     }
 
     /**
-     * Prepares UI for Ambient view.
+     * 대기 모드에서 사용할 UI를 준비한다.
      */
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
@@ -158,13 +150,14 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
         super.onEnterAmbient(ambientDetails);
 
 
-        /** Clears Handler queue (only needed for updates in active mode). */
+        /** 대기 모드에선 핸들러를 사용하지 않기 때문에 핸들러 큐를 정리한다. */
         mActiveModeUpdateHandler.removeMessages(MSG_UPDATE_SCREEN);
 
         /**
-         * Following best practices outlined in WatchFaces API (keeping most pixels black,
-         * avoiding large blocks of white pixels, using only black and white,
-         * and disabling anti-aliasing anti-aliasing, etc.)
+         * 워치페이스 API의 우수 실천 사례를 적용한다.
+         * (대부분의 픽셀을 검정색으로 칠하기,
+         * 가급적 흰색 픽셀로 채우는 영역을 갖지 않기, 흑백 색상만 사용하기,
+         * 안티 앨리어싱 사용하지 않기 등)
          */
 
         stepCounterLayout.setBackgroundColor(Color.BLACK);
@@ -180,14 +173,12 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     }
 
     /**
-     * Updates UI in Ambient view (once a minute). Because we need to update UI sooner than that
-     * (every ~20 seconds), we also use an Alarm. However, since the processor is awake for this
-     * callback, we might as well call refreshDisplayAndSetNextUpdate() to update screen and reset
-     * the Alarm.
-     * <p/>
-     * If you are happy with just updating the screen once a minute in Ambient Mode (which will be
-     * the case a majority of the time), then you can just use this method and remove all
-     * references/code regarding Alarms.
+     * 대기 모드에서 매 1분 마다 UI를 갱신한다. 우리는 매 20초 마다 화면을 갱신해야 하기 때문에 별로도 알람을 사용해다.
+     * 하지만 이 메서드가 불릴 때 프로세서는 깨어있는 상태이기 때문에, 여기서도 refreshDisplayAndSetNextUpdate() 를
+     * 호출해서 화면을 갱신하고 알람을 리셋한다.
+     *
+     * 대기 모드에서 1분마다 화면을 갱신해도 충분하다면(대부분의 경우에 해당할 것이다), 이 메서드만 사용해서 화면을 갱신하고
+     * 다른 알람 관련 코드는 지워버려도 된다.
      */
     @Override
     public void onUpdateAmbient() {
@@ -198,14 +189,14 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     }
 
     /**
-     * Prepares UI for Active view (non-Ambient).
+     * 대화 모드에서 사용할 UI를 준비한다.
      */
     @Override
     public void onExitAmbient() {
         Log.d(TAG, "onExitAmbient()");
         super.onExitAmbient();
 
-        /** Clears out Alarms since they are only used in ambient mode. */
+        /** 알람은 대기 모드에서만 사용하므로 초기화한다. */
         mAmbientStateAlarmManager.cancel(mAmbientStatePendingIntent);
 
         stepCounterLayout.setBackgroundResource(R.drawable.jogging);
@@ -221,8 +212,8 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     }
 
     /**
-     * Loads data/updates screen (via method), but most importantly, sets up the next refresh
-     * (active mode = Handler and ambient mode = Alarm).
+     * 데이터를 읽고 화면을 갱신한다. 또한 다음 갱신을 위한 준비 작업을 한다
+     * (대화 모드에선 핸들러에 메시지 등록, 대기 모드에선 알람 등록)
      */
     private void refreshDisplayAndSetNextUpdate() {
 
@@ -233,14 +224,14 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
         long timeMs = System.currentTimeMillis();
 
         if (isAmbient()) {
-            /** Calculate next trigger time (based on state). */
+            /** 모드에 따른 다음 갱신 시각을 계산 */
             long delayMs = AMBIENT_INTERVAL_MS - (timeMs % AMBIENT_INTERVAL_MS);
             long triggerTimeMs = timeMs + delayMs;
 
             /**
-             * Note: Make sure you have set activity launchMode to singleInstance in the manifest.
-             * Otherwise, it is easy for the AlarmManager launch intent to open a new activity
-             * every time the Alarm is triggered rather than reusing this Activity.
+             * 참고: 매니페스트에서 액티비티의 실행 모드를 singleInstance 로 설정해야 한다.
+             * 이렇게 설정하지 않으면 매번 알람이 활성화 될 때 마다 AlarmManager 가 보낸 인텐트는
+             * 기존 액티비티를 사용하지 않고 새로운 액티비티를 만든다.
              */
             mAmbientStateAlarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
@@ -248,7 +239,7 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
                     mAmbientStatePendingIntent);
 
         } else {
-            /** Calculate next trigger time (based on state). */
+            /** 모드에 따른 다음 갱신 시각을 계산 */
             long delayMs = ACTIVE_INTERVAL_MS - (timeMs % ACTIVE_INTERVAL_MS);
 
             mActiveModeUpdateHandler.removeMessages(MSG_UPDATE_SCREEN);
@@ -257,7 +248,7 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
     }
 
     /**
-     * Handler separated into static class to avoid memory leaks.
+     * 메모리 누수를 막기 위해 핸들러는 별도의 정적 클래스로 선언한다.
      */
     private static class UpdateHandler extends Handler {
         private final WeakReference<StepCounterActivity> mMainActivityWeakReference;
