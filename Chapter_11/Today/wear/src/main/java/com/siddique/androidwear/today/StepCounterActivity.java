@@ -70,7 +70,7 @@ public class StepCounterActivity extends WearableActivity implements SensorEvent
 
         mAmbientStatePendingIntent = PendingIntent.getActivity(
                 getApplicationContext(),
-                0 /* requestCode */,
+                0 /* 요청 코드 */,
                 ambientStateIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
