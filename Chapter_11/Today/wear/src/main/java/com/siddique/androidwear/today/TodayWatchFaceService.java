@@ -299,7 +299,7 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             }
             super.onApplyWindowInsets(insets);
 
-            // 둥근 모양 시계에서 사용할 리소스를 읽어들인다.
+            // 원형 시계에서 사용할 리소스를 읽어들인다.
             Resources resources = TodayWatchFaceService.this.getResources();
             boolean isRound = insets.isRound();
             mXOffset = resources.getDimension(isRound

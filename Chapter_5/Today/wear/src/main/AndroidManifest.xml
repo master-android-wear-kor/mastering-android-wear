@@ -27,7 +27,5 @@
         <activity
             android:name=".OnThisDayActivity"
             android:label="@string/on_this_day_title" />
-
     </application>
-
 </manifest>

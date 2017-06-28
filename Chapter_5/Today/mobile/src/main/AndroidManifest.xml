@@ -23,7 +23,6 @@
             </intent-filter>
         </activity>
 
-
         <!-- 웨어러블 디바이스가 보낸 메시지를 수신한다 -->
         <service android:name=".HandheldListenerService">
             <intent-filter>
@@ -32,7 +31,5 @@
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/today" />
             </intent-filter>
         </service>
-
     </application>
-
 </manifest>

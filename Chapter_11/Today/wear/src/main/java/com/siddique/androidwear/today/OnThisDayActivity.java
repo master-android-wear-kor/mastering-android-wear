@@ -127,14 +127,14 @@ public class OnThisDayActivity extends Activity implements
             @Override
             public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
                 // 페이지  마진 조정:
-                //  둥근 디스플레이에서 너무 빽빽하게 보이지 않도록 페이지 간 가로 여백을 조금 더 줌
+                // 원형 디스플레이에서 너무 빽빽하게 보이지 않도록 페이지 간 가로 여백을 조금 더 줌
                 final boolean round = insets.isRound();
                 int rowMargin = res.getDimensionPixelOffset(R.dimen.page_row_margin);
                 int colMargin = res.getDimensionPixelOffset(round ?
                         R.dimen.page_column_margin_round : R.dimen.page_column_margin);
                 pager.setPageMargins(rowMargin, colMargin);
 
-                // GridViewPager는 둥근 디스플레이에서 레이아웃을 적절히 처리하기 위해 inset을 이용한다.
+                // GridViewPager는 원형 디스플레이에서 레이아웃을 적절히 처리하기 위해 inset을 이용한다.
                 // 리스너가 inset 값을 가로챘기 때문에 GridViewPager에 명시적으로 값을 설정해줘야 한다.
                 pager.onApplyWindowInsets(insets);
                 return insets;

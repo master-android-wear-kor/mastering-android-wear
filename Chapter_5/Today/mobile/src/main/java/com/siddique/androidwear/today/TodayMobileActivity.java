@@ -51,7 +51,6 @@ public class TodayMobileActivity extends Activity implements
         }
     }
 
-
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "Google Api Client Connected");
@@ -72,7 +71,6 @@ public class TodayMobileActivity extends Activity implements
                 });
             }
         }).start();
-
     }
 
     @Override

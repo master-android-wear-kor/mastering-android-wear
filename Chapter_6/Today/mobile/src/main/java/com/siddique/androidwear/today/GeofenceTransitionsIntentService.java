@@ -34,8 +34,6 @@ import java.util.Set;
  * 지오펜스 변경 내역을 수신
  */
 public class GeofenceTransitionsIntentService extends IntentService {
-
-
     private static final String TAG = GeofenceTransitionsIntentService.class.getName();
 
     public GeofenceTransitionsIntentService() {
@@ -50,7 +48,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
     /**
      * 전달받은 인텐트 처리
      *
-     * @param intent 로케이션 서비스가 보낸 인텐트. 이 인텐트는 addGeofences() 가 호출될 때 PendingIntent 에 포함된 형태로 로케이션 서비스에게 전달된다.
+     * @param intent 로케이션 서비스가 보낸 인텐트. 이 인텐트는 addGeofences() 가 호출될 때
+     *               PendingIntent 에 포함된 형태로 로케이션 서비스에게 전달된다.
      */
     @Override
     protected void onHandleIntent(Intent intent) {
